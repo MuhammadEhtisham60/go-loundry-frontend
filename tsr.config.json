@@ -1,0 +1,4 @@
+{
+  "routesDirectory": "src/containers",
+  "generatedRouteTree": "src/routeTree.gen.ts"
+}
