@@ -1,10 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Loader2 } from "lucide-react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FormikText } from "@/components/common/sharedfields";
 import { GoldButton } from "@/components/ui-kit";
 import { toast } from "sonner";
+import { useLoginMutation } from "@/services";
+import { useDispatch } from "react-redux";
+import { onLoggedIn } from "@/store/slices/authSlice";
 
 interface LoginProps {
   setTab: (tab: string) => void;
@@ -17,6 +20,8 @@ const loginSchema = Yup.object().shape({
 
 export default function Login({ setTab }: LoginProps) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [login, { isLoading }] = useLoginMutation();
 
   const initialValues = {
     email: "",
@@ -24,9 +29,45 @@ export default function Login({ setTab }: LoginProps) {
     rememberMe: false,
   };
 
-  const handleSubmit = () => {
-    toast.success("Welcome back!");
-    navigate({ to: "/" });
+  const handleSubmit = async (values: typeof initialValues) => {
+    try {
+      const result = await login({
+        email: values.email.trim(),
+        password: values.password,
+      }).unwrap();
+
+      if (result?.data) {
+        const { tokens, user } = result.data;
+        dispatch(
+          onLoggedIn({
+            access: tokens.access,
+            refresh: tokens.refresh,
+            user,
+          }),
+        );
+        toast.success(result.message || "Welcome back!");
+        navigate({ to: "/" });
+      } else {
+        toast.error(result.message || "Login failed. Please try again.");
+      }
+    } catch (err: unknown) {
+      const error = err as {
+        data?: { message?: string; errors?: Record<string, string[]> | string[] };
+        status?: number;
+      };
+      const serverMsg = error?.data?.message;
+      const fieldErrors = error?.data?.errors;
+
+      if (fieldErrors && typeof fieldErrors === "object" && !Array.isArray(fieldErrors)) {
+        Object.entries(fieldErrors).forEach(([, messages]) => {
+          messages.forEach((msg) => toast.error(msg));
+        });
+      } else if (Array.isArray(fieldErrors)) {
+        fieldErrors.forEach((msg) => toast.error(msg));
+      } else {
+        toast.error(serverMsg || "Invalid credentials. Please try again.");
+      }
+    }
   };
 
   return (
@@ -71,7 +112,16 @@ export default function Login({ setTab }: LoginProps) {
             </button>
           </div>
 
-          <GoldButton className="w-full">Sign in</GoldButton>
+          <GoldButton className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Signing in…
+              </span>
+            ) : (
+              "Sign in"
+            )}
+          </GoldButton>
         </Form>
       )}
     </Formik>

@@ -1,113 +1,138 @@
 import { publicAPI } from "./index";
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface RegisterPayload {
+  email?: string;
+  phone?: string;
+  password: string;
+  password_confirm: string;
+  full_name: string;
+  user_type?: "user" | "admin";
+}
+
+export interface LoginPayload {
+  email?: string;
+  phone?: string;
+  password: string;
+}
+
+export interface OtpRequestPayload {
+  phone: string;
+}
+
+export interface OtpVerifyPayload {
+  phone: string;
+  otp: string;
+}
+
+export interface ForgotPasswordPayload {
+  email?: string;
+  phone?: string;
+}
+
+export interface ResetPasswordPayload {
+  email?: string;
+  phone?: string;
+  otp_code: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+export interface AuthTokens {
+  access: string;
+  refresh: string;
+}
+
+export interface UserData {
+  id: string;
+  email?: string;
+  phone?: string;
+  full_name: string;
+  role: "CUSTOMER" | "SUPPORT_AGENT" | "ADMIN" | "SUPER_ADMIN";
+  user_type: "user" | "admin";
+  is_blocked?: boolean;
+  profile_photo?: string;
+}
+
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data?: T;
+  errors?: Record<string, string[]> | string[] | null;
+}
+
+export interface LoginResponse {
+  tokens: AuthTokens;
+  user: UserData;
+}
+
+// ─── Endpoints ────────────────────────────────────────────────────────────────
+
 export const authAPI = publicAPI.injectEndpoints({
   endpoints: (build) => ({
-    login: build.mutation<unknown, unknown>({
+    /** POST /api/auth/register/ — Register a new Customer account */
+    register: build.mutation<ApiResponse<UserData>, RegisterPayload>({
       query: (body) => ({
-        url: "/api/public/tenant/login/",
+        url: "/api/auth/register/",
         method: "POST",
         body,
       }),
     }),
-    verify2fa: build.mutation<unknown, unknown>({
+
+    /** POST /api/auth/login/ — Authenticate via email or phone + password */
+    login: build.mutation<ApiResponse<LoginResponse>, LoginPayload>({
       query: (body) => ({
-        url: "/api/public/verify-2fa/",
+        url: "/api/auth/login/",
         method: "POST",
         body,
       }),
     }),
-    resend2faOtp: build.mutation<unknown, unknown>({
+
+    /** POST /api/auth/login/otp/ — Request an OTP code */
+    requestOtp: build.mutation<ApiResponse, OtpRequestPayload>({
       query: (body) => ({
-        url: "/api/public/resend-2fa-otp/",
+        url: "/api/auth/login/otp/",
         method: "POST",
         body,
       }),
     }),
-    signup: build.mutation<unknown, unknown>({
+
+    /** POST /api/auth/login/otp/verify/ — Validate OTP and receive JWT tokens */
+    verifyOtp: build.mutation<ApiResponse<LoginResponse>, OtpVerifyPayload>({
       query: (body) => ({
-        url: "/api/public/tenant/signup/",
+        url: "/api/auth/login/otp/verify/",
         method: "POST",
         body,
       }),
     }),
-    unifiedSignup: build.mutation<unknown, unknown>({
+
+    /** POST /api/auth/forgot-password/ — Send password reset OTP to email/phone */
+    forgotPassword: build.mutation<ApiResponse, ForgotPasswordPayload>({
       query: (body) => ({
-        url: "/api/public/tenant/signup/",
+        url: "/api/auth/forgot-password/",
         method: "POST",
         body,
       }),
     }),
-    verifyOtp: build.mutation<unknown, unknown>({
+
+    /** POST /api/auth/reset-password/ — Submit OTP + new password to reset */
+    resetPassword: build.mutation<ApiResponse, ResetPasswordPayload>({
       query: (body) => ({
-        url: "/api/public/verify-otp/",
+        url: "/api/auth/reset-password/",
         method: "POST",
         body,
-      }),
-    }),
-    resendOtp: build.mutation<unknown, unknown>({
-      query: (body) => ({
-        url: "/api/public/resend-signup-otp/",
-        method: "POST",
-        body,
-      }),
-    }),
-    verifySignupOtp: build.mutation<unknown, unknown>({
-      query: (body) => ({
-        url: "/api/public/verify-signup-otp/",
-        method: "POST",
-        body,
-      }),
-    }),
-    requestPasswordReset: build.mutation<unknown, unknown>({
-      query: (body) => ({
-        url: "/api/public/password-reset/request/",
-        method: "POST",
-        body,
-      }),
-    }),
-    resendPasswordResetOtp: build.mutation<unknown, unknown>({
-      query: (body) => ({
-        url: "/api/public/password-reset/resend-otp/",
-        method: "POST",
-        body,
-      }),
-    }),
-    verifyResetOtp: build.mutation<unknown, unknown>({
-      query: (body) => ({
-        url: "/api/public/password-reset/verify-otp/",
-        method: "POST",
-        body,
-      }),
-    }),
-    setNewPassword: build.mutation<unknown, unknown>({
-      query: (body) => ({
-        url: "/api/public/password-reset/complete/",
-        method: "POST",
-        body,
-      }),
-    }),
-    googleLogin: build.mutation<unknown, unknown>({
-      query: (token) => ({
-        url: "/api/public/auth/google/",
-        method: "POST",
-        body: { token },
       }),
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {
-  useSignupMutation,
-  useUnifiedSignupMutation,
+  useRegisterMutation,
   useLoginMutation,
-  useVerify2faMutation,
-  useResend2faOtpMutation,
+  useRequestOtpMutation,
   useVerifyOtpMutation,
-  useResendOtpMutation,
-  useVerifySignupOtpMutation,
-  useRequestPasswordResetMutation,
-  useResendPasswordResetOtpMutation,
-  useVerifyResetOtpMutation,
-  useSetNewPasswordMutation,
-  useGoogleLoginMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authAPI;

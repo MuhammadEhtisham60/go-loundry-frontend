@@ -7,18 +7,9 @@ const baseQuery = fetchBaseQuery({
   baseUrl: API_URL,
   prepareHeaders: (headers) => {
     const token = getToken().access;
-    if (token) headers.set("Authorization", `JWT ${token}`);
-
-    if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
-      headers.set("X-Tenant-Hostname", window.location.hostname);
-    }
-
+    if (token) headers.set("Authorization", `Bearer ${token}`);
     return headers;
   },
-  credentials:
-    typeof window !== "undefined" && window.location.hostname === "localhost"
-      ? "same-origin"
-      : "include",
 });
 
 interface AuthState {
@@ -63,26 +54,19 @@ export const privateAPI = createApi({
   reducerPath: "privateAPI",
   baseQuery: baseQueryWithReauth,
   tagTypes: [
-    "TenantSubscriptionPlans",
-    "TenantSubscriptionPlanStats",
-    "TenantUsers",
-    "TenantDepartments",
-    "TenantRoles",
-    "AvailableModules",
-    "TenantBillingUsers",
-    "TenantBillingUserDetails",
-    "TenantPaymentInvoice",
     "Profile",
-    "TenantStripeConfig",
-    "TenantEmailConfig",
-    "AIConfig",
-    "EndUserCompanyProfile",
-    "CompanyProfile",
-    "OnboardingStatus",
-    "TenantNotifications",
-    "TenantUnreadCount",
-    "SuperNotifications",
-    "SuperUnreadCount",
+    "Addresses",
+    "Orders",
+    "Reviews",
+    "Conversations",
+    "Messages",
+    "Notifications",
+    "Dashboard",
+    "Reports",
+    "Customers",
+    "Services",
+    "Warehouse",
   ],
   endpoints: () => ({}),
 });
+

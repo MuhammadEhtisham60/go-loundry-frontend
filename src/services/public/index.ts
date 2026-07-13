@@ -6,15 +6,9 @@ export const publicAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     prepareHeaders: (headers) => {
-      if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
-        headers.set("X-Tenant-Hostname", window.location.hostname);
-      }
       return headers;
     },
-    credentials:
-      typeof window !== "undefined" && window.location.hostname === "localhost"
-        ? "same-origin"
-        : "include",
   }),
   endpoints: () => ({}),
 });
+
