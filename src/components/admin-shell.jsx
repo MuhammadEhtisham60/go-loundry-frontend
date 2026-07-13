@@ -1,5 +1,8 @@
 // @ts-nocheck
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { onLoggedOut } from "@/store/slices/authSlice";
+import { toast } from "sonner";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -17,7 +20,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const sections = [
   {
@@ -55,8 +58,23 @@ export function AdminShell({ children, title, subtitle, actions }) {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
+  const { isAuthenticated, userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const isActive = (it) =>
     it.exact ? pathname === it.to : pathname === it.to || pathname.startsWith(it.to + "/");
+
+  useEffect(() => {
+    if (!isAuthenticated || userInfo?.user_type !== "admin") {
+      toast.error("You are unauthenticated or do not have access to the backoffice.");
+      navigate({ to: "/", replace: true });
+    }
+  }, [isAuthenticated, userInfo, navigate]);
+
+  if (!isAuthenticated || userInfo?.user_type !== "admin") {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -116,12 +134,15 @@ export function AdminShell({ children, title, subtitle, actions }) {
           ))}
 
           <div className="px-3 pt-4 border-t border-[color:var(--sidebar-border)]">
-            <Link
-              to="/"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-[color:var(--muted)]"
+            <button
+              onClick={() => {
+                dispatch(onLoggedOut());
+                navigate({ to: "/" });
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-[color:var(--muted)]"
             >
-              <LogOut className="w-4 h-4" /> Exit to App
-            </Link>
+              <LogOut className="w-4 h-4" /> Logout
+            </button>
           </div>
         </nav>
       </aside>

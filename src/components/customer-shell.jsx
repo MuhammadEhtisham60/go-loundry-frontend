@@ -60,12 +60,6 @@ export function CustomerShell({ children }) {
               <span className="absolute top-2 right-2 w-2 h-2 bg-[color:var(--gold)] rounded-full"></span>
             </button>
             <Link
-              to="/admin"
-              className="text-xs text-muted-foreground hover:text-foreground px-3 py-2"
-            >
-              Back Office
-            </Link>
-            <Link
               to="/auth"
               search={{ tab: "signup" }}
               className="px-5 py-2.5 rounded-full text-sm font-medium bg-primary text-primary-foreground shadow-elegant hover:opacity-90 transition"
@@ -102,13 +96,6 @@ export function CustomerShell({ children }) {
               className="block text-center mt-3 px-5 py-3 rounded-full text-sm font-medium bg-primary text-primary-foreground shadow-elegant hover:opacity-90 transition"
             >
               Sign Up
-            </Link>
-            <Link
-              to="/admin"
-              onClick={() => setOpen(false)}
-              className="block text-center px-5 py-3 text-xs text-muted-foreground"
-            >
-              Back Office
             </Link>
           </div>
         )}

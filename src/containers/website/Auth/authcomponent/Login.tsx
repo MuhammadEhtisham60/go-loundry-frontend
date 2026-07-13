@@ -46,7 +46,11 @@ export default function Login({ setTab }: LoginProps) {
           }),
         );
         toast.success(result.message || "Welcome back!");
-        navigate({ to: "/" });
+        if (user.user_type === "admin") {
+          navigate({ to: "/admin" });
+        } else {
+          navigate({ to: "/" });
+        }
       } else {
         toast.error(result.message || "Login failed. Please try again.");
       }
