@@ -19,6 +19,7 @@ export interface WarehouseLocation {
   latitude: string;
   longitude: string;
   max_service_radius_km: string;
+  address?: string;
 }
 
 // ─── Endpoints ────────────────────────────────────────────────────────────────

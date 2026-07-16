@@ -15,7 +15,7 @@ import { adminReportsRoute } from "@/containers/backoffice/Reports/route";
 import { adminServicesRoute } from "@/containers/backoffice/Services/route";
 import { adminSettingsRoute } from "@/containers/backoffice/Settings/route";
 import { adminUsersRoute } from "@/containers/backoffice/Users/route";
-import { adminZonesRoute } from "@/containers/backoffice/Zones/route";
+import { adminWarehouseRoute, adminWarehouseDetailRoute } from "@/containers/backoffice/Warehouse/route";
 
 export const privateRoutes = [
   chatRoute,
@@ -33,5 +33,6 @@ export const privateRoutes = [
   adminServicesRoute,
   adminSettingsRoute,
   adminUsersRoute,
-  adminZonesRoute,
+  adminWarehouseRoute,
+  adminWarehouseDetailRoute,
 ];

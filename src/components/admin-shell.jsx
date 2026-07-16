@@ -35,7 +35,7 @@ const sections = [
     label: "Operations",
     items: [
       { to: "/admin/services", label: "Services & Pricing", icon: Sparkles },
-      { to: "/admin/zones", label: "Zones & Warehouse", icon: MapPin },
+      { to: "/admin/warehouse", label: "Warehouse", icon: MapPin },
       { to: "/admin/chats", label: "Support Chats", icon: MessageSquare },
       { to: "/admin/ratings", label: "Ratings", icon: Star },
     ],
