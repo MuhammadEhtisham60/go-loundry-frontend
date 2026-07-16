@@ -7,18 +7,23 @@ export interface LaundryService {
   id: string;
   name: string;
   description: string;
+  unit: string;
+  unit_display?: string;
   price: string;
-  order_sequence: number;
-  is_active?: boolean;
+  is_active: boolean;
+  display_order: number;
+  order_sequence?: number; // legacy fallback
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ReorderSequenceItem {
-  service_id: string;
-  order_sequence: number;
+  id: string;
+  display_order: number;
 }
 
 export interface ReorderPayload {
-  sequences: ReorderSequenceItem[];
+  services: ReorderSequenceItem[];
 }
 
 // ─── Endpoints ────────────────────────────────────────────────────────────────

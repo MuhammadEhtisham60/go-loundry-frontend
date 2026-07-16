@@ -46,7 +46,7 @@ export default function Login({ setTab }: LoginProps) {
           }),
         );
         toast.success(result.message || "Welcome back!");
-        if (user.user_type === "admin") {
+        if (user.user_type === "admin" || user.user_type === "super_admin") {
           navigate({ to: "/admin" });
         } else {
           navigate({ to: "/" });

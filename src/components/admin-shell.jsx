@@ -66,13 +66,13 @@ export function AdminShell({ children, title, subtitle, actions }) {
     it.exact ? pathname === it.to : pathname === it.to || pathname.startsWith(it.to + "/");
 
   useEffect(() => {
-    if (!isAuthenticated || userInfo?.user_type !== "admin") {
+    if (!isAuthenticated || (userInfo?.user_type !== "admin" && userInfo?.user_type !== "super_admin")) {
       toast.error("You are unauthenticated or do not have access to the backoffice.");
       navigate({ to: "/", replace: true });
     }
   }, [isAuthenticated, userInfo, navigate]);
 
-  if (!isAuthenticated || userInfo?.user_type !== "admin") {
+  if (!isAuthenticated || (userInfo?.user_type !== "admin" && userInfo?.user_type !== "super_admin")) {
     return null;
   }
 

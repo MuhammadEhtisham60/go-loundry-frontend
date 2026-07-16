@@ -8,7 +8,7 @@ export interface RegisterPayload {
   password: string;
   password_confirm: string;
   full_name: string;
-  user_type?: "user" | "admin";
+  user_type?: "user" | "admin" | "super_admin";
 }
 
 export interface LoginPayload {
@@ -50,7 +50,7 @@ export interface UserData {
   phone?: string;
   full_name: string;
   role: "CUSTOMER" | "SUPPORT_AGENT" | "ADMIN" | "SUPER_ADMIN";
-  user_type: "user" | "admin";
+  user_type: "user" | "admin" | "super_admin";
   is_blocked?: boolean;
   profile_photo?: string;
 }
