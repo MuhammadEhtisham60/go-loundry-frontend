@@ -2,13 +2,17 @@
 import { Link } from "@tanstack/react-router";
 import { CustomerShell } from "@/components/customer-shell";
 import { GoldButton, Input } from "@/components/ui-kit";
-import { SERVICES, formatPKR } from "@/lib/mock-data";
-import { Search, Sparkles, ArrowRight } from "lucide-react";
+import { formatPKR } from "@/lib/mock-data";
+import { Search, Sparkles, ArrowRight, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useGetServicesQuery } from "@/services";
 
 export function ServicesPage() {
   const [q, setQ] = useState("");
-  const filtered = SERVICES.filter((s) => s.name.toLowerCase().includes(q.toLowerCase()));
+  const { data: servicesRes, isLoading } = useGetServicesQuery();
+
+  const services = servicesRes?.data || [];
+  const filtered = services.filter((s) => s.name.toLowerCase().includes(q.toLowerCase()));
 
   return (
     <CustomerShell>
@@ -31,45 +35,51 @@ export function ServicesPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((s, i) => (
-            <div
-              key={s.id}
-              className="glass rounded-2xl p-5 hover:border-[color:var(--gold)]/30 transition group fade-in-up"
-              style={{ animationDelay: `${i * 30}ms` }}
-            >
-              <div className="flex items-start justify-between">
-                <div
-                  className="w-11 h-11 rounded-xl grid place-items-center"
-                  style={{ background: "color-mix(in oklab, var(--gold) 18%, transparent)" }}
-                >
-                  <Sparkles className="w-4 h-4 text-[color:var(--gold)]" />
-                </div>
-                {s.popular && (
-                  <span className="text-[10px] tracking-widest uppercase gold-text font-medium">
-                    Popular
-                  </span>
-                )}
-              </div>
-              <div className="font-display text-xl mt-4">{s.name}</div>
-              <div className="text-sm text-muted-foreground mt-1 min-h-[40px]">{s.desc}</div>
-              <div className="mt-5 pt-5 border-t border-[color:var(--glass-border)] flex items-center justify-between">
-                <div>
-                  <div className="font-display text-xl gold-text">{formatPKR(s.price)}</div>
-                  <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                    per {s.unit}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-[color:var(--gold)]" />
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filtered.map((s, i) => (
+              <div
+                key={s.id}
+                className="glass rounded-2xl p-5 hover:border-[color:var(--gold)]/30 transition group fade-in-up"
+                style={{ animationDelay: `${i * 30}ms` }}
+              >
+                <div className="flex items-start justify-between">
+                  <div
+                    className="w-11 h-11 rounded-xl grid place-items-center"
+                    style={{ background: "color-mix(in oklab, var(--gold) 18%, transparent)" }}
+                  >
+                    <Sparkles className="w-4 h-4 text-[color:var(--gold)]" />
                   </div>
+                  {s.popular && (
+                    <span className="text-[10px] tracking-widest uppercase gold-text font-medium">
+                      Popular
+                    </span>
+                  )}
                 </div>
-                <Link
-                  to="/order"
-                  className="w-9 h-9 rounded-full grid place-items-center bg-[color:var(--input)] hover:bg-[color:var(--gold)] hover:text-[color:var(--primary-foreground)] transition"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                <div className="font-display text-xl mt-4">{s.name}</div>
+                <div className="text-sm text-muted-foreground mt-1 min-h-[40px]">{s.description}</div>
+                <div className="mt-5 pt-5 border-t border-[color:var(--glass-border)] flex items-center justify-between">
+                  <div>
+                    <div className="font-display text-xl gold-text">{formatPKR(s.price)}</div>
+                    <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                      per {s.unit_display || s.unit.toLowerCase()}
+                    </div>
+                  </div>
+                  <Link
+                    to="/order"
+                    className="w-9 h-9 rounded-full grid place-items-center bg-[color:var(--input)] hover:bg-[color:var(--gold)] hover:text-[color:var(--primary-foreground)] transition"
+                  >
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="mt-12 glass rounded-2xl p-8 text-center">
           <h3 className="font-display text-2xl">Need something custom?</h3>
