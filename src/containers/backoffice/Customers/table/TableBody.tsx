@@ -1,15 +1,6 @@
 // @ts-nocheck
 import { Ban, CheckCircle2 } from "lucide-react";
-
-interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  orders: number;
-  joined: string;
-  status: "active" | "blocked";
-}
+import { Customer } from "@/services";
 
 interface TableBodyProps {
   rows: Customer[];
@@ -35,43 +26,46 @@ export function TableBody({ rows, onBlock, onUnblock }: TableBodyProps) {
                   color: "var(--primary-foreground)",
                 }}
               >
-                {c.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
+                {c.full_name
+                  ? c.full_name
+                      .trim()
+                      .split(/\s+/)
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                  : "?"}
               </div>
-              <span>{c.name}</span>
+              <span>{c.full_name}</span>
             </div>
           </td>
 
           {/* Email */}
-          <td className="py-3 px-3 text-muted-foreground">{c.email}</td>
+          <td className="py-3 px-3 text-muted-foreground">{c.email || "-"}</td>
 
           {/* Phone */}
-          <td className="py-3 px-3 text-muted-foreground">{c.phone}</td>
-
-          {/* Orders */}
-          <td className="py-3 px-3 gold-text font-medium">{c.orders}</td>
+          <td className="py-3 px-3 text-muted-foreground">{c.phone || "-"}</td>
 
           {/* Joined */}
-          <td className="py-3 px-3 text-muted-foreground">{c.joined}</td>
+          <td className="py-3 px-3 text-muted-foreground">
+            {c.created_at ? new Date(c.created_at).toLocaleDateString("en-PK") : "-"}
+          </td>
 
           {/* Status */}
           <td className="py-3 px-3">
             <span
               className={`text-[11px] px-2.5 py-1 rounded-full border ${
-                c.status === "active"
+                !c.is_blocked
                   ? "bg-[color:var(--success)]/15 text-[color:var(--success)] border-[color:var(--success)]/30"
                   : "bg-[color:var(--destructive)]/15 text-[color:var(--destructive)] border-[color:var(--destructive)]/30"
               }`}
             >
-              {c.status}
+              {!c.is_blocked ? "active" : "blocked"}
             </span>
           </td>
 
           {/* Actions */}
           <td className="py-3 px-3 text-right">
-            {c.status === "active" ? (
+            {!c.is_blocked ? (
               <button
                 onClick={() => onBlock(c)}
                 className="text-xs text-[color:var(--destructive)] hover:underline inline-flex items-center gap-1"

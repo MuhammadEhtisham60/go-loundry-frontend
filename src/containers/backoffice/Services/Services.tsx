@@ -214,6 +214,7 @@ export function AdminServices() {
       <AdminShell
         title="Services & pricing"
         subtitle="Add, edit, and reorder services shown in the customer app"
+        actions={null}
       >
         <Section>
           <div className="space-y-3">

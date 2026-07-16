@@ -10,43 +10,39 @@ export interface Customer {
   full_name: string;
   role?: string;
   is_blocked: boolean;
+  profile_photo?: string | null;
+  created_at?: string;
 }
 
 export interface ListCustomersParams {
-  role?: string;
   search?: string;
+  is_blocked?: boolean;
 }
 
 // ─── Endpoints ────────────────────────────────────────────────────────────────
 
 export const customersAPI = privateAPI.injectEndpoints({
   endpoints: (build) => ({
-    /** GET /api/admin/users/ — List users; filterable by role and search (Support/Admin only) */
+    /** GET /api/users/ — List users; filterable by search (Support/Admin only) */
     getCustomers: build.query<ApiResponse<Customer[]>, ListCustomersParams | void>({
       query: (params) => {
         const qs = new URLSearchParams();
-        if (params?.role) qs.set("role", params.role);
         if (params?.search) qs.set("search", params.search);
+        if (params?.is_blocked !== undefined) {
+          qs.set("is_blocked", String(params.is_blocked));
+        }
         const str = qs.toString();
-        return `/api/admin/users/${str ? `?${str}` : ""}`;
+        return `/api/users/${str ? `?${str}` : ""}`;
       },
       providesTags: ["Customers"],
     }),
 
-    /** POST /api/admin/users/{id}/block/ — Block a customer account (Admin/Super Admin only) */
-    blockUser: build.mutation<ApiResponse<{ id: string; is_blocked: boolean }>, string>({
-      query: (id) => ({
-        url: `/api/admin/users/${id}/block/`,
+    /** POST /api/users/{id}/block/ — Block or unblock a customer account (Admin/Super Admin only) */
+    blockUser: build.mutation<ApiResponse<Customer>, { id: string; is_blocked: boolean }>({
+      query: ({ id, is_blocked }) => ({
+        url: `/api/users/${id}/block/`,
         method: "POST",
-      }),
-      invalidatesTags: ["Customers"],
-    }),
-
-    /** POST /api/admin/users/{id}/unblock/ — Unblock a customer account (Admin/Super Admin only) */
-    unblockUser: build.mutation<ApiResponse<{ id: string; is_blocked: boolean }>, string>({
-      query: (id) => ({
-        url: `/api/admin/users/${id}/unblock/`,
-        method: "POST",
+        body: { is_blocked },
       }),
       invalidatesTags: ["Customers"],
     }),
@@ -57,5 +53,4 @@ export const customersAPI = privateAPI.injectEndpoints({
 export const {
   useGetCustomersQuery,
   useBlockUserMutation,
-  useUnblockUserMutation,
 } = customersAPI;

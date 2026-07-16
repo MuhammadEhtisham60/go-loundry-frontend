@@ -2,16 +2,7 @@
 import { TableHeader } from "./TableHeader";
 import { TableBody } from "./TableBody";
 import { COLUMN_HEADERS } from "../data/customersData";
-
-interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  orders: number;
-  joined: string;
-  status: "active" | "blocked";
-}
+import { Customer } from "@/services";
 
 interface TableProps {
   rows: Customer[];
