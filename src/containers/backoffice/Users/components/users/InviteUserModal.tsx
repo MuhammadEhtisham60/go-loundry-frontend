@@ -5,6 +5,7 @@ import { Field, Input, Select, GoldButton, GhostButton } from "@/components/ui-k
 import { X, Check, Loader2, Mail } from "lucide-react";
 import { useInviteTeamMemberMutation } from "@/services";
 import type { Role } from "@/services";
+import { extractApiError } from "@/lib/apiError";
 
 interface InviteUserModalProps {
   roles: Role[];
@@ -45,11 +46,15 @@ export function InviteUserModal({ roles, onClose }: InviteUserModalProps) {
       };
       if (form.phone.trim()) payload.phone = form.phone.trim();
 
+      console.log("Submitting team member invite:", payload);
       await inviteUser(payload).unwrap();
       toast.success(`Account created — credentials sent to ${form.email}`);
       onClose();
     } catch (err) {
-      toast.error(err?.data?.message || "Failed to create user");
+      console.error("Invite team member failed:", err);
+      const errorMsg = extractApiError(err, "Failed to create user");
+      console.log("Displaying error toast:", errorMsg);
+      toast.error(errorMsg);
     }
   };
 

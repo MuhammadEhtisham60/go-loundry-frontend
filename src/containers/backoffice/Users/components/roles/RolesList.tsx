@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState } from "react";
 import { toast } from "sonner";
+import { extractApiError } from "@/lib/apiError";
 import { Edit3, Loader2, Plus, Shield, Trash2 } from "lucide-react";
 import { DeleteConfirmModal } from "../shared/DeleteConfirmModal";
 import { RoleEditorModal } from "./RoleEditorModal";
@@ -23,9 +24,7 @@ export function RolesList() {
       toast.success(`"${deletingRole.name}" role deleted`);
       setDeletingRole(null);
     } catch (err) {
-      toast.error(
-        err?.data?.message || "Cannot delete — users are still assigned to this role"
-      );
+      toast.error(extractApiError(err, "Cannot delete — users may still be assigned to this role"));
     }
   };
 

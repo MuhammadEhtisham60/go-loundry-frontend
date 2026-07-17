@@ -14,6 +14,7 @@ import {
 } from "@/services";
 import type { TeamMember } from "@/services";
 import { toast } from "sonner";
+import { extractApiError } from "@/lib/apiError";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -64,7 +65,7 @@ export function UsersList() {
       toast.success(`${deletingMember.full_name} removed`);
       setDeletingMember(null);
     } catch (err) {
-      toast.error(err?.data?.message || "Failed to remove member");
+      toast.error(extractApiError(err, "Failed to remove member"));
     }
   };
 
@@ -120,7 +121,7 @@ export function UsersList() {
                 <th className="py-3 px-3 font-medium">Role</th>
                 <th className="py-3 px-3 font-medium">Last active</th>
                 <th className="py-3 px-3 font-medium">Status</th>
-                <th />
+                <th className="py-3 px-3 font-medium text-end">Action</th>
               </tr>
             </thead>
             <tbody>

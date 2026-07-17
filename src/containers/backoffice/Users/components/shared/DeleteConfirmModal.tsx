@@ -17,16 +17,16 @@ export function DeleteConfirmModal({
 }: DeleteConfirmModalProps) {
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 grid place-items-center p-4 bg-gray-500/50"
       onClick={onClose}
     >
       <div
-        className="glass rounded-2xl max-w-sm w-full p-6"
+        className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl shadow-red-500/10 border border-red-100"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="font-display text-xl mb-2">Are you sure?</h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          This will permanently remove <strong>{label}</strong>. This action
+        <h2 className="font-display text-xl mb-2 text-gray-900">Are you sure?</h2>
+        <p className="text-sm text-gray-500 mb-6">
+          This will permanently remove <strong className="text-gray-800">{label}</strong>. This action
           cannot be undone.
         </p>
         <div className="flex justify-end gap-2">
@@ -34,7 +34,7 @@ export function DeleteConfirmModal({
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="h-10 px-4 rounded-xl bg-red-500/80 hover:bg-red-500 text-white text-sm font-medium flex items-center gap-2 transition-colors disabled:opacity-60"
+            className="h-10 px-4 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-medium flex items-center gap-2 transition-colors disabled:opacity-60"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

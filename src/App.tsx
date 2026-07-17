@@ -15,7 +15,7 @@ export default function App({ queryClient }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <SmoothScroll />
         <Outlet />
-        <Toaster theme="dark" position="top-right" />
+        <Toaster theme="light" position="top-right" richColors closeButton />
       </QueryClientProvider>
     </Provider>
   );
