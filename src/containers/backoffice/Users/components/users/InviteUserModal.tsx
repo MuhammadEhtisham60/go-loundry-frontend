@@ -55,11 +55,11 @@ export function InviteUserModal({ roles, onClose }: InviteUserModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 grid place-items-center p-4 bg-gray-500/50"
       onClick={onClose}
     >
       <div
-        className="glass rounded-2xl max-w-md w-full p-6"
+        className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl shadow-[#35b3dc]/10 border border-[#35b3dc]/15"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── Header ────────────────────────────────────────────── */}
