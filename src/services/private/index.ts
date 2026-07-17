@@ -66,6 +66,8 @@ export const privateAPI = createApi({
     "Customers",
     "Services",
     "Warehouse",
+    "Team",
+    "Roles",
   ],
   endpoints: () => ({}),
 });

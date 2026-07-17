@@ -27,3 +27,4 @@ export * from "./private/reports";
 export * from "./private/customers";
 export * from "./private/adminCatalog";
 export * from "./private/warehouse";
+export * from "./private/team";

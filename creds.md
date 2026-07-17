@@ -1,20 +1,8 @@
 {
-  "email": "muhammsdadehtisham618@gmail.com",
-  "phone": "03001234567",
-  "password": "Admin@123",
-  "password_confirm": "Admin@123",
-  "full_name": "John Doe",
-  "user_type": "admin",
-  "email": "admin1@admin.com",
-  "phone": "030012334567",
+  "email": "admin@goloundry.com",
+  "phone": "030000000000",
   "password": "admin@123",
   "password_confirm": "admin@123",
-  "full_name": "John Doe",
-  "user_type": "admin",
-  "email": "muhammsdadehtisham@gmail.com",
-  "phone": "0300123234567",
-  "password": "Admin@123",
-  "password_confirm": "Admin@123",
   "full_name": "John Doe",
   "user_type": "super_admin"
 }

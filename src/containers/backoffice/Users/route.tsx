@@ -1,6 +1,6 @@
 import { createRoute } from "@tanstack/react-router";
 import { Route as rootRoute } from "../../__root";
-import { AdminUsers } from "./Users";
+import { AdminUsers } from "./index";
 
 export const adminUsersRoute = createRoute({
   getParentRoute: () => rootRoute,
